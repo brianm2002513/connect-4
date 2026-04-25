@@ -1,113 +1,95 @@
-export const isWinner = (gameBoard, currentMove, currentPlayer) => {
-    let board = [...gameBoard];
-    board[currentMove] = currentPlayer;
-
-    const winLines = [
-        [0, 1, 2, 3],
-        [4, 5, 6, 7],
-        [8, 9, 10, 11],
-        [12, 13, 14, 15],
-        [0, 4, 8, 12],
-        [1, 5, 9, 13],
-        [2, 6, 10, 14],
-        [3, 7, 11, 15],
-        [0, 5, 10, 15],
-        [3, 6, 9, 12],
-    ];
-
-    for (let i = 0; i < winLines.length; i++) {
-        const [c1, c2, c3, c4] = winLines[i];
-
-        if (board[c1] > 0 &&
-            board[c1] === board[c2] &&
-            board[c2] === board[c3] &&
-            board[c3] === board[c4]) {
-            return true;
+export const checkWin = (board) => {
+    // Check horizontal
+    for (let r = 0; r < 6; r++) {
+        for (let c = 0; c < 4; c++) {
+            let i = r * 7 + c;
+            if (board[i] !== 0 && board[i] === board[i+1] && board[i] === board[i+2] && board[i] === board[i+3]) {
+                return true;
+            }
+        }
+    }
+    // Check vertical
+    for (let c = 0; c < 7; c++) {
+        for (let r = 0; r < 3; r++) {
+            let i = r * 7 + c;
+            if (board[i] !== 0 && board[i] === board[i+7] && board[i] === board[i+14] && board[i] === board[i+21]) {
+                return true;
+            }
+        }
+    }
+    // Check diagonal (down-right)
+    for (let r = 0; r < 3; r++) {
+        for (let c = 0; c < 4; c++) {
+            let i = r * 7 + c;
+            if (board[i] !== 0 && board[i] === board[i+8] && board[i] === board[i+16] && board[i] === board[i+24]) {
+                return true;
+            }
+        }
+    }
+    // Check diagonal (up-right)
+    for (let r = 3; r < 6; r++) {
+        for (let c = 0; c < 4; c++) {
+            let i = r * 7 + c;
+            if (board[i] !== 0 && board[i] === board[i-6] && board[i] === board[i-12] && board[i] === board[i-18]) {
+                return true;
+            }
         }
     }
     return false;
 }
 
+export const isWinner = (gameBoard, currentMove, currentPlayer) => {
+    let board = [...gameBoard];
+    board[currentMove] = currentPlayer;
+    return checkWin(board);
+}
+
 export const isDraw = (gameBoard, currentMove, currentPlayer) => {
     let board = [...gameBoard];
     board[currentMove] = currentPlayer;
-
-    let count = board.reduce((n, x) => n + (x === 0), 0);
-    console.log(`count ${count}`);
-    return count === 0;
+    return !board.includes(0);
 }
 
-const getRandomComputerMove = (gameBoard) => {
+export const getValidMoves = (board) => {
     let validMoves = [];
-    for (let i = 0; i < gameBoard.length; i++) {
-        if (gameBoard[i] === 0) {
-            validMoves.push(i);
-        }
+    // Top row is indices 0-6
+    for (let c = 0; c < 7; c++) {
+        if (board[c] === 0) validMoves.push(c); 
     }
-    let rndMove = Math.floor(Math.random() * validMoves.length)
-    return validMoves[rndMove];
+    return validMoves;
 }
 
-const getPosition = (gameBoard, moveChecks) => {
-    for (let check = 0; check < moveChecks.length; check++) {
-        for (let i = 0; i < moveChecks[check].max; i += moveChecks[check].step) {
-
-            let series =
-                gameBoard[i + moveChecks[check].indices[0]].toString() +
-                gameBoard[i + moveChecks[check].indices[1]].toString() +
-                gameBoard[i + moveChecks[check].indices[2]].toString() +
-                gameBoard[i + moveChecks[check].indices[3]].toString();
-
-            switch (series) {
-                case "1110":
-                case "2220":
-                    return i + moveChecks[check].indices[3];
-                case "1101":
-                case "2202":
-                    return i + moveChecks[check].indices[2];
-                case "1011":
-                case "2022":
-                    return i + moveChecks[check].indices[1];
-                case "0111":
-                case "0222":
-                    return i + moveChecks[check].indices[0];
-                default:
-            }
+export const getAvailableRow = (board, col) => {
+    for (let r = 5; r >= 0; r--) {
+        if (board[r * 7 + col] === 0) {
+            return r;
         }
     }
     return -1;
-};
+}
 
 export const getComputerMove = (gameBoard) => {
-    let moveChecks = [
-        // vertical combinations
-        {
-            indices: [0, 4, 8, 12],
-            max: 4,
-            step: 1
-        },
-        // horizontal combinations
-        {
-            indices: [0, 1, 2, 3],
-            max: 16,
-            step: 4
-        },
-        // diagonal-1 combination
-        {
-            indices: [0, 5, 10, 15],
-            max: 16,
-            step: 16
-        },
-        // diagonal-2 combination
-        {
-            indices: [3, 6, 9, 12],
-            max: 16,
-            step: 16
-        }
-    ];
+    let validCols = getValidMoves(gameBoard);
+    if (validCols.length === 0) return -1;
 
-    let position = getPosition(gameBoard, moveChecks);
-    if (position > -1) return position;
+    // 1. Can AI Win? (Player 2)
+    for (let col of validCols) {
+        let row = getAvailableRow(gameBoard, col);
+        let boardCopy = [...gameBoard];
+        boardCopy[row * 7 + col] = 2; 
+        if (checkWin(boardCopy)) return row * 7 + col;
+    }
 
-    return getRandomComputerMove(gameBoard);
+    // 2. Can Player Win? Block them. (Player 1)
+    for (let col of validCols) {
+        let row = getAvailableRow(gameBoard, col);
+        let boardCopy = [...gameBoard];
+        boardCopy[row * 7 + col] = 1; 
+        if (checkWin(boardCopy)) return row * 7 + col;
+    }
+
+    // 3. Fallback: Random Valid Move
+    let rndCol = validCols[Math.floor(Math.random() * validCols.length)];
+    let rndRow = getAvailableRow(gameBoard, rndCol);
+    return rndRow * 7 + rndCol;
 }

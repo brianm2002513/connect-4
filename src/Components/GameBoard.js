@@ -13,11 +13,11 @@ import {
     GAME_STATE_DRAW
 } from "../Constants";
 
-import { isWinner, isDraw, getComputerMove } from "../helper";
+import { isWinner, isDraw, getComputerMove, getAvailableRow } from "../helper";
 
 const GameBoard = () => {
 
-    const [gameBoard, setGameBoard] = useState(Array(16).fill(NO_PLAYER));
+    const [gameBoard, setGameBoard] = useState(Array(NO_CIRCLES).fill(NO_PLAYER));
     const [currentPlayer, setCurrentPlayer] = useState(PLAYER_1);
     const[gameState, setGameState] = useState(GAME_STATE_PLAYING);
     const [winPlayer, setWinPlayer] = useState(NO_PLAYER);
@@ -29,7 +29,7 @@ const GameBoard = () => {
     }, [])
 
     const initGame = () => {
-        setGameBoard(Array(16).fill(NO_PLAYER));
+        setGameBoard(Array(NO_CIRCLES).fill(NO_PLAYER));
         setCurrentPlayer(PLAYER_1);
         setGameState(GAME_STATE_PLAYING);
         setWinPlayer(NO_PLAYER);
@@ -44,22 +44,33 @@ const GameBoard = () => {
     }
 
     const suggestMove = () => {
-        circleClicked(getComputerMove(gameBoard));
+        let aiMove = getComputerMove(gameBoard);
+        if (aiMove !== -1) {
+            processMove(aiMove);
+        }
     }
 
     const circleClicked = (id) => {
-        console.log("Circle Clicked: " + id);
-
-        if(gameBoard[id] !== NO_PLAYER) return;
-
         if (gameState !== GAME_STATE_PLAYING) return;
+        
+        // Calculate the column that was clicked
+        let col = id % 7;
+        let row = getAvailableRow(gameBoard, col);
+        
+        // If row is -1, the column is full
+        if (row === -1) return;
+        
+        let actualId = row * 7 + col;
+        processMove(actualId);
+    }
+
+    const processMove = (id) => {
+        if(gameBoard[id] !== NO_PLAYER) return;
 
         if (isWinner(gameBoard, id, currentPlayer)) {
            setGameState(GAME_STATE_WIN);
            setWinPlayer(currentPlayer);
-        }
-
-        if (isDraw(gameBoard, id, currentPlayer)) {
+        } else if (isDraw(gameBoard, id, currentPlayer)) {
             setGameState(GAME_STATE_DRAW);
             setWinPlayer(NO_PLAYER);
         }
@@ -72,8 +83,6 @@ const GameBoard = () => {
         })
 
         setCurrentPlayer(currentPlayer === PLAYER_1 ? PLAYER_2 : PLAYER_1)
-
-        console.log(gameBoard);
     }
 
     const renderCircle = (id) => {

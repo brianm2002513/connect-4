@@ -4,8 +4,9 @@ import "../Game.css";
 const GameCircle = ({ id, children, className, onCircleClicked }) => {
 
   return (
-    <div className={`gameCircle ${className}`} onClick={() => onCircleClicked(id)}>
-      {children}
+    <div className="gameCircleContainer" onClick={() => onCircleClicked(id)}>
+      {className !== 'player0' && <div className={`piece ${className}`}></div>}
+      <div className="boardFace"></div>
     </div>
   )
 }

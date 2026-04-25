@@ -1,70 +1,46 @@
-# Getting Started with Create React App
+# Connect-4 (Engineering Refactor) 🔴🟡
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A fully playable Connect-4 game built with **React**, featuring robust game logic, a simulated physics engine (gravity), and a Minimax-inspired heuristic AI.
 
-## Available Scripts
+## 🧠 Engineering Highlights
+This project was refactored to demonstrate professional software engineering practices, specifically focusing on **Game Logic** and **Unit Testing**.
 
-In the project directory, you can run:
+1.  **True Connect-4 Logic (7x6 Board)**: Unlike basic Tic-Tac-Toe variants, this project uses a full 42-cell board matrix. 
+2.  **Gravity Engine**: Includes a custom algorithm that calculates the lowest available row in a selected column, simulating the real-world physics of dropping a piece into a slot.
+3.  **Heuristic AI**: Features an AI opponent that evaluates the board state to either take an immediate win or block a player's winning move.
+4.  **Test-Driven Validation**: The core logic (`helper.js`) is completely decoupled from the React UI and validated using a **Jest Unit Test Suite**.
 
-### `npm start`
+## 🛠 Tech Stack
+*   **Frontend**: React.js
+*   **Logic**: Vanilla JavaScript
+*   **Testing**: Jest
+*   **Styling**: Pure CSS Grid
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## 🚀 How to Run
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Installation
+First, install the necessary dependencies:
+```bash
+npm install
+```
 
-### `npm test`
+### Run the Application
+Start the React development server:
+```bash
+npm start
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Run the Engineering Test Suite
+To verify the game logic (win conditions, gravity, and AI blocking):
+```bash
+npm test
+```
 
-### `npm run build`
+## 🧪 Test Coverage Examples
+The Jest test suite (`helper.test.js`) automatically proves the following scenarios:
+*   Horizontal, Vertical, and Diagonal (Both directions) win detection.
+*   Gravity mechanics (pieces correctly fall to the bottom-most empty slot).
+*   AI Defensive Logic (The computer successfully identifies and blocks a player's 3-in-a-row).
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+---
+*Created by Brian Munashe Mbawa as part of a technical portfolio demonstration.*
