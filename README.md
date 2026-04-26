@@ -1,6 +1,17 @@
 # Connect-4 (Engineering Refactor) 🔴🟡
 
+[![CI/CD Pipeline](https://github.com/brianm2002513/connect-4/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/brianm2002513/connect-4/actions/workflows/ci-cd.yml)
+
 A fully playable Connect-4 game built with **React**, featuring robust game logic, a simulated physics engine (gravity), and a Minimax-inspired heuristic AI.
+
+## 🔄 CI/CD Pipeline
+Every push to this repository triggers a multi-stage validation engine:
+*   **Linting**: Enforces JavaScript best practices using ESLint.
+*   **Security Scan**: Uses **GitHub CodeQL** to perform static analysis for security vulnerabilities.
+*   **Unit Testing**: Executes a comprehensive Jest suite to verify game win-states and AI logic.
+*   **Production Build**: Generates an optimized React bundle.
+*   **Automated Release**: Packages the build into a ZIP artifact and creates a GitHub Release on every merge to `main`.
+
 
 ## 🧠 Engineering Highlights
 This project was refactored to demonstrate professional software engineering practices, specifically focusing on **Game Logic** and **Unit Testing**.
